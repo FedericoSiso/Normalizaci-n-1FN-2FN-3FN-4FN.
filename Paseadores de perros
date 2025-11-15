@@ -1,0 +1,39 @@
+PASEO<DNI_paseador, DNI_cliente, nombre_cliente, domicilio_cliente, nombre_perro,
+edad_perro, raza_perro, correa_raza, comida_raza, categoria_paseo,
+monto_categoria_paseo, servicio_paseo>
+con las restricciones:
+
+1. Cada paseador se identifica por su DNI (único por paseador). Cada paseador pasea varios perros.
+2. Cada cliente está identificado por su DNI (único por cliente). De cada cliente registramos su DNI, su
+nombre y un domicilio. Sabemos que un nombre puede repetirse para diferentes DNI, y que varios
+clientes pueden vivir en el mismo domicilio.
+3. Cada cliente tiene varios perros, los cuales se identifican por el nombre.
+4. Los nombres de los perros son únicos para cada cliente, pero se pueden repetir entre diferentes
+clientes (aún cuando los clientes vivan en el mismo domicilio). Por ejemplo, Lucía tiene dos perros:
+Blanquita y Coky; y Daniel tiene tres perros: Duque, Coky y Felipe.
+5. De cada perro conocemos su nombre, su edad y qué raza de perro es.
+6. Una raza de perro determinada siempre utiliza un solo tipo de collar y come un solo tipo de comida,
+sin importar quién es el paseador. Por ejemplo, para los perros Labradores se utilizan collares de
+cuero y se le da comida Premium, y para los perros Rottweiler se utilizan collares reforzados de nylon y
+se le da comida Especial. Sin embargo, para diferentes razas de perro, pueden utilizarse el mismo
+tipo de collar y el mismo tipo de comida,
+7. Todos los paseadores ofrecen diferentes categorías de paseos. Cada categoría tiene varios
+servicios asociados durante el paseo (sin importar el paseador que lo ofrece). Por ejemplo,
+todos los paseadores de la relación PASEOS ofrecen las categorías común y completa. La
+categoría común incluye la comida y juegos en una zona verde. Sin embargo, la categoría
+completa incluye comida, un baño en veterinaria, vacunas (si corresponde) y juegos en un
+parque.
+8. Cada paseador cobra un precio diferente en cada categoría, pero siempre el mismo a todos los
+clientes. Por ejemplo, el paseador Javier cobra $200 por la categoría común y $400 por la categoría
+completa, mientras que el paseador Alejandro cobra $150 por categoría común y $450 por categoría
+completa. Puede darse que dos paseadores cobren lo mismo por algunas de las categorías de paseo,
+pero no se cumple para todos los paseadores.
+9. Cuando un cliente contrata varias categorías de paseo de un paseador, las mismas se hacen para
+todos sus perros. Por ejemplo, Lucía (DNI: 12.434.897) tiene dos perros: Blanquita y Coky; y contrata a
+Javier para sus categorías común y completa. Esto significa que Blanquita y Coky tendrán paseos con
+categorías común y también completa.
+
+DF1: DNI_cliente → nombre_cliente, domicilio_cliente
+DF2: DNI_cliente, nombre_perro → edad_perro, raza_perro
+DF3: raza_perro → correa_raza, comida_raza
+DF4: DNI_paseador, categoria_paseo, monto_categoria_paseo 
