@@ -48,33 +48,33 @@ PK: {DNI_cliente, nombre_perro, raza_perro, DNI_paseador, categoria_paseo, servi
 
 Aplico DF3 a Res
 
-PERRO <raza_perro(PK), correa_raza, comida_raza>
+PERRO <raza_perro(PK), correa_raza, comida_raza> Vale DF3 y esta en 2FN porque es una dependencia Total
 Res = {DNI_paseador, DNI_cliente, nombre_cliente, domicilio_cliente, nombre_perro, edad_perro, raza_perro, correa_raza, comida_raza, categoria_paseo, monto_categoria_paseo, servicio_paseo} - 
-      {correa_raza, comida_raza} =  {DNI_paseador, DNI_cliente, nombre_cliente, domicilio_cliente, nombre_perro, edad_perro, raza_perro, categoria_paseo, monto_categoria_paseo, servicio_paseo}
+      {correa_raza, comida_raza} =  {DNI_paseador, DNI_cliente, nombre_cliente, domicilio_cliente, nombre_perro, edad_perro, raza_perro, categoria_paseo, monto_categoria_paseo, servicio_paseo} No esta en 2NF, Ni 3FN
 
 
 Aplico DF2 a Res1
 
-CLIENTE_PERRO <DNI_cliente(PK,FK), nombre_perro(PK), edad_perro, raza_perro>
-Res1 = Res - {edad_perro, raza_perro} =  {DNI_paseador, DNI_cliente, nombre_cliente, domicilio_cliente, nombre_perro, categoria_paseo, monto_categoria_paseo, servicio_paseo}
+CLIENTE_PERRO <DNI_cliente(PK,FK), nombre_perro(PK), edad_perro, raza_perro> Vale DF2 y esta en 2FN porque es una dependencia Total
+Res1 = Res - {edad_perro, raza_perro} =  {DNI_paseador, DNI_cliente, nombre_cliente, domicilio_cliente, nombre_perro, categoria_paseo, monto_categoria_paseo, servicio_paseo} Esta en 2FN y no en 3FN
 
 
 
 Aplico DF1 a Res1
 
-CLIENTE <DNI_cliente(PK), nombre_cliente, domicilio_cliente>
-Res2 = Res1 - {nombre_cliente, domicilio_cliente} =  {DNI_paseador, DNI_cliente, nombre_perro, categoria_paseo, monto_categoria_paseo, servicio_paseo}
+CLIENTE <DNI_cliente(PK), nombre_cliente, domicilio_cliente> Vale DF1 y esta en 2FN porque es una dependencia Total
+Res2 = Res1 - {nombre_cliente, domicilio_cliente} =  {DNI_paseador, DNI_cliente, nombre_perro, categoria_paseo, monto_categoria_paseo, servicio_paseo} Esta en 2FN y no 3FN
 
 
 Aplico DF4 a Res3
 
-PASEADOR <DNI_paseador(PK), categoria_paseo(PK), monto_categoria_paseo>
-Res3 = Res2 - {monto_categoria_paseo} =  {DNI_paseador, DNI_cliente, nombre_perro, categoria_paseo, servicio_paseo}
+PASEADOR <DNI_paseador(PK), categoria_paseo(PK), monto_categoria_paseo> Vale DF4 y esta en 2FN porque es una dependencia Total
+Res3 = Res2 - {monto_categoria_paseo} =  {DNI_paseador, DNI_cliente, nombre_perro, categoria_paseo, servicio_paseo} Esta en 2FN, no en 3FN
 
 3FN
 
-PERRO_R1 <raza_perro(PK), correa_raza, comida_raza>
-CLIENTE_PERRO_R2 <DNI_cliente(PK,FK), nombre_perro(PK), edad_perro, raza_perro(FK)>
+PERRO_R1 <raza_perro(PK), correa_raza, comida_raza> Vale PERRO_R1 y esta en 2FN y 3FN porque no tiene dependencias transitivas
+CLIENTE_PERRO_R2 <DNI_cliente(PK,FK), nombre_perro(PK), edad_perro, raza_perro(FK)> Vale CLIENTE_PERRO_R2 y esta en 2FN y 3FN porque no tiene dependencias transitivas
 
 4FN
 
@@ -84,13 +84,27 @@ DM3:DNI_paseador → → categoria_paseo
 
 Aplico DM1 a Res3
 
-CLIENTE_PERRO <DNI_cliente(PK) nombre_perro(PK)>
+CLIENTE_PERRO <DNI_cliente(PK) nombre_perro(PK)> Esta en 4FN porque es trivial
 Res3 = {DNI_paseador, DNI_cliente, nombre_perro, categoria_paseo, servicio_paseo} - {nombre_perro(PK)} = {DNI_paseador, DNI_cliente, categoria_paseo, servicio_paseo}
 
 Aplico DM2 A R4
-PASEO <categoria_paseo(PK), servicio_paseo(PK)>
+PASEO <categoria_paseo(PK), servicio_paseo(PK)> Esta en 4FN porque es trivial
 R4 = Res3 - {servicio_paseo(PK)} = {DNI_paseador, DNI_cliente, categoria_paseo}
 
 Aplico DM3 a R5
-PASEADOR_CATEGORIA <DNI_paseador(PK), categoria_paseo(PK)>
+PASEADOR_CATEGORIA <DNI_paseador(PK), categoria_paseo(PK)> Esta en 4FN porque es trivial
 R5 = R4 - {categoria_paseo(PK)} = {DNI_paseador, DNI_cliente}
+
+
+Resultado:
+PERRO <raza_perro(PK), correa_raza, comida_raza>
+CLIENTE_PERRO <DNI_cliente(PK,FK), nombre_perro(PK), edad_perro, raza_perro>
+CLIENTE <DNI_cliente(PK), nombre_cliente, domicilio_cliente>
+PASEADOR <DNI_paseador(PK), categoria_paseo(PK), monto_categoria_paseo>
+Res3 <DNI_paseador, DNI_cliente, nombre_perro, categoria_paseo, servicio_paseo>
+PERRO_R1 <raza_perro(PK), correa_raza, comida_raza>
+CLIENTE_PERRO_R2 <DNI_cliente(PK,FK), nombre_perro(PK), edad_perro, raza_perro(FK)>
+CLIENTE_PERRO <DNI_cliente(PK) nombre_perro(PK)>
+PASEO <categoria_paseo(PK), servicio_paseo(PK)>
+PASEADOR_CATEGORIA <DNI_paseador(PK), categoria_paseo(PK)>
+R5 <DNI_paseador, DNI_cliente>
