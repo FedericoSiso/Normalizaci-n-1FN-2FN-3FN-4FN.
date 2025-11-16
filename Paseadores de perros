@@ -33,7 +33,64 @@ todos sus perros. Por ejemplo, Lucía (DNI: 12.434.897) tiene dos perros: Blanqu
 Javier para sus categorías común y completa. Esto significa que Blanquita y Coky tendrán paseos con
 categorías común y también completa.
 
-DF1: DNI_cliente → nombre_cliente, domicilio_cliente
+DF1: DNI_cliente → nombre_cliente, domicilio_cliente 
 DF2: DNI_cliente, nombre_perro → edad_perro, raza_perro
 DF3: raza_perro → correa_raza, comida_raza
-DF4: DNI_paseador, categoria_paseo, monto_categoria_paseo 
+DF4: DNI_paseador, categoria_paseo → monto_categoria_paseo 
+
+CC:  {DNI_cliente, nombre_perro, raza_perro, DNI_paseador, categoria_paseo} - {domicilio_cliente,
+edad_perro, raza_perro, correa_raza, comida_raza, monto_categoria_paseo} + {servicio_paseo}
+
+PK: {DNI_cliente, nombre_perro, raza_perro, DNI_paseador, categoria_paseo, servicio_paseo}
+
+
+2FN
+
+Aplico DF3 a Res
+
+PERRO <raza_perro(PK), correa_raza, comida_raza>
+Res = {DNI_paseador, DNI_cliente, nombre_cliente, domicilio_cliente, nombre_perro, edad_perro, raza_perro, correa_raza, comida_raza, categoria_paseo, monto_categoria_paseo, servicio_paseo} - 
+      {correa_raza, comida_raza} =  {DNI_paseador, DNI_cliente, nombre_cliente, domicilio_cliente, nombre_perro, edad_perro, raza_perro, categoria_paseo, monto_categoria_paseo, servicio_paseo}
+
+
+Aplico DF2 a Res1
+
+CLIENTE_PERRO <DNI_cliente(PK,FK), nombre_perro(PK), edad_perro, raza_perro>
+Res1 = Res - {edad_perro, raza_perro} =  {DNI_paseador, DNI_cliente, nombre_cliente, domicilio_cliente, nombre_perro, categoria_paseo, monto_categoria_paseo, servicio_paseo}
+
+
+
+Aplico DF1 a Res1
+
+CLIENTE <DNI_cliente(PK), nombre_cliente, domicilio_cliente>
+Res2 = Res1 - {nombre_cliente, domicilio_cliente} =  {DNI_paseador, DNI_cliente, nombre_perro, categoria_paseo, monto_categoria_paseo, servicio_paseo}
+
+
+Aplico DF4 a Res3
+
+PASEADOR <DNI_paseador(PK), categoria_paseo(PK), monto_categoria_paseo>
+Res3 = Res2 - {monto_categoria_paseo} =  {DNI_paseador, DNI_cliente, nombre_perro, categoria_paseo, servicio_paseo}
+
+3FN
+
+PERRO_R1 <raza_perro(PK), correa_raza, comida_raza>
+CLIENTE_PERRO_R2 <DNI_cliente(PK,FK), nombre_perro(PK), edad_perro, raza_perro(FK)>
+
+4FN
+
+DM1: DNI_cliente → → nombre_perro 
+DM2: categoria_paseo → → servicio_paseo
+DM3:DNI_paseador → → categoria_paseo 
+
+Aplico DM1 a Res3
+
+CLIENTE_PERRO <DNI_cliente(PK) nombre_perro(PK)>
+Res3 = {DNI_paseador, DNI_cliente, nombre_perro, categoria_paseo, servicio_paseo} - {nombre_perro(PK)} = {DNI_paseador, DNI_cliente, categoria_paseo, servicio_paseo}
+
+Aplico DM2 A R4
+PASEO <categoria_paseo(PK), servicio_paseo(PK)>
+R4 = Res3 - {servicio_paseo(PK)} = {DNI_paseador, DNI_cliente, categoria_paseo}
+
+Aplico DM3 a R5
+PASEADOR_CATEGORIA <DNI_paseador(PK), categoria_paseo(PK)>
+R5 = R4 - {categoria_paseo(PK)} = {DNI_paseador, DNI_cliente}
